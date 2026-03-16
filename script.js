@@ -165,6 +165,10 @@ skillBars.forEach(bar => {
     skillObserver.observe(bar);
 });
 
+// ==================== TELEGRAM CONFIG ====================
+const TELEGRAM_BOT_TOKEN = '8418699374:AAH7Eq9BHRQ_c2HdZgPKkqd5YnVxjZGbBoM';
+const TELEGRAM_CHAT_ID = '7854612472';
+
 // ==================== CONTACT FORM HANDLING ====================
 const contactForm = document.getElementById('contactForm');
 
@@ -183,22 +187,28 @@ contactForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    const text = `📬 New Portfolio Contact Message!\n\n👤 Name: ${name}\n📧 Email: ${email}\n\n💬 Message:\n${message}`;
+
     try {
         submitButton.disabled = true;
         submitButton.innerHTML = '<span>Sending...</span><i class="fas fa-spinner fa-spin"></i>';
 
-        const response = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email, message })
-        });
+        const response = await fetch(
+            `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: text
+                })
+            }
+        );
 
         const result = await response.json();
 
-        if (!response.ok) {
-            throw new Error(result.error || 'Failed to send message.');
+        if (!result.ok) {
+            throw new Error(result.description || 'Telegram API error');
         }
 
         showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
