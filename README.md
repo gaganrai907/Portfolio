@@ -197,6 +197,24 @@ Portfolio/
 
 The contact form currently shows a success notification. To make it functional:
 
+### Telegram Notification (Implemented)
+
+The project now includes an API route at `api/contact.js` that forwards contact form messages to Telegram.
+
+1. Create a Telegram bot using `@BotFather` and copy the bot token.
+2. Get your chat ID:
+   - Send a message to your bot in Telegram.
+   - Open: `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
+   - Find `chat.id` in the JSON response.
+3. Add environment variables on your hosting platform:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_CHAT_ID`
+4. Deploy on a platform that supports serverless functions (recommended: Vercel).
+
+Important:
+- GitHub Pages is static hosting only, so `api/contact.js` will not run there.
+- For Telegram notifications, deploy this project to Vercel/Netlify (with serverless functions enabled).
+
 1. **Using Formspree** (Easy):
    ```html
    <form action="https://formspree.io/f/your-form-id" method="POST">
